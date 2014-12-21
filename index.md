@@ -1,0 +1,83 @@
+---
+title       : Application for summarizing number of Earthquakes per hemisphere
+subtitle    : 
+author      : 
+job         : 
+framework   : io2012   # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+
+---
+
+## What is this app?
+
+* This app summarizes number of Earthquakes happened per hemisphere from the period of January 1, 2000 to present. 
+* This app also provides the place of highest magnitude Earthquake happened in the corresponding hemisphere and the value of highest magnitude in the time period of January 1, 2000 to present.
+* This app needs two user inputs:
+ - Earthquake magnitude - for setting the minimum scale above which the data will be summarized - This is handled by a slider in the User Interface.
+ - Hemisphere - for selecting the hemisphere of interest - This is handled by a radio button in the User Interface.
+
+## How this app works?
+* Data for this app is downloaded from the USGS website and then stored in local directory and is then read into R.
+
+--- 
+## How this app works (continued)?
+* Based on user inputs, the minimum Earthquake magnitude and hemisphere are used to identify the subset of the data.
+* Subset of the data is then used to return the number of earthquakes, highest magnitude and place of highest magnitude earthquake.
+
+## R coding
+
+```r
+eqdata <- read.csv("./Data/Earthquake.csv");head(eqdata, 1)
+```
+
+```
+##                       time latitude longitude  depth mag magType nst gap
+## 1 2014-12-10T21:03:39.430Z  25.5679  122.4485 254.36 6.1     mwb  NA  24
+##    dmin  rms net         id                  updated
+## 1 1.045 0.88  us usc000t5bu 2014-12-11T13:57:30.000Z
+##                        place       type
+## 1 86km NE of Keelung, Taiwan earthquake
+```
+
+---
+## R coding (continued)
+
+```r
+eqdata <- read.csv("./Data/Earthquake.csv")
+mapp <- data.frame("v1" = c("Eastern","Western","Northern","Southern"), "v2"=c("longitude>=0","longitude<0","latitude>=0", "latitude<0"))
+rs <-mapp[mapp$v1 == "Western",];extext <- levels(rs$v2)[rs$v2]
+subdat <- subset(eqdata, eval(parse(text = extext)));max(subdat$mag)
+```
+
+```
+## [1] 8.8
+```
+
+```r
+nrow(subdat[subdat$mag>=7,])
+```
+
+```
+## [1] 124
+```
+## Anything interesting in this app?
+* This app additionally provides visual representation of the Earthquakes happened in the world based on user inputs.
+* Visual representation provides a clearer and better picture of the data.
+
+---
+## Visual Picture
+* Visual representation helps to understand the Earthquake prone regions better than the numeric values returned.
+* This app also displays the histogram of the number of Earthquakes based on user inputs.
+
+<img src="assets/fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
+
+
+
+
+
+
+
