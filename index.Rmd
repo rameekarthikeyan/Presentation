@@ -61,10 +61,11 @@ subdat <- subset(eqdata, eval(parse(text = extext)))
 max(subdat$mag)
 nrow(subdat[subdat$mag>=7,])
 gtpl <- subdat[which.max(subdat$mag),][,]
+scal <- subdat[subdat$mag>=7,][,]
 ```
 ``` {r echo =FALSE, results='asis',fig.align='center'}
 map()
-points(subdat$longitude, subdat$latitude, col=2, pch=18)
+points(scal$longitude, scal$latitude, col=2, pch=18)
 points(gtpl$longitude,gtpl$latitude, col = "darkgreen", pch = 17, cex = 2.5)
 ```
 
